@@ -6,7 +6,8 @@ Console.CancelKeyPress += (_, _) => Console.CursorVisible = true;
 string[] baseChoices = [
     "1. Value types",
     "2. Reference types",
-    "3. Exit"
+    "3. Boxing / Unboxing",
+    "4. Exit"
 ];
 
 const string aMarkup = "[blue]a[/]";
@@ -41,11 +42,13 @@ void Start()
                 referenceExamples();
                 break;
             case 2:
+                boxingUnboxingExamples();
+                break;
             default:
                 break;
         }
     }
-    while (index != 2);
+    while (index < 3);
 }
 
 #region [ Value types ]
@@ -474,6 +477,178 @@ IEnumerable<string> referenceFour()
 
     yield return $"[green]people[/] after change: {people.Print()}";
     yield return $"[yellow]people2[/] after change: {people2.Print()}";
+}
+
+#endregion
+
+#region [ Boxing and unboxing ]
+
+void boxingUnboxingExamples()
+{
+    AnsiConsole.Write(
+        writePaddedText(
+            """
+            int a = 4;
+            object b = a;         // implicit boxing
+            object c = (object)a; // explicit boxing
+
+            // b = ?
+            // c = ?
+            """
+        )
+    );
+
+    promptNext("");
+    renderWeakSeparator(Color.Green);
+
+    AnsiConsole.Write(
+        writePaddedText(
+            string.Join('\n', boxingOne())
+        )
+    );
+
+    promptNext("");
+    renderSeparator();
+
+    AnsiConsole.Write(
+        writePaddedText(
+            """
+            object d = 4.0;
+            double e = (double)d; // explicit
+
+            // only explicit casts are available when unboxing
+            """
+        )
+    );
+
+    promptNext("");
+    renderWeakSeparator(Color.Green);
+
+    AnsiConsole.Write(
+        writePaddedText(
+            string.Join('\n', boxingTwo())
+        )
+    );
+
+    promptNext("");
+    renderSeparator();
+
+    AnsiConsole.Write(
+        writePaddedText(
+            """
+            // string.Format(string format, object? arg0, object? arg1, object? arg2);
+            string [teal]formatStr[/] = string.Format(
+                format: "{0}, {1}, {2}",
+                arg0: "Hello, world!",      // reference type
+                arg1: true,                 // value type
+                arg2: 42                    // value type
+            );
+            """
+        )
+    );
+
+    promptNext("");
+    renderWeakSeparator(Color.Green);
+
+    AnsiConsole.Write(
+        writePaddedText(
+            string.Join('\n', boxingThree())
+        )
+    );
+
+    promptNext("");
+    renderSeparator();
+
+    AnsiConsole.Write(
+        writePaddedText(
+            """
+            string [teal]patternMatching[/](object obj)
+            {
+                // if obj is pattern matched, perform unboxing to value type
+                // implicit unboxing done by internal pattern matching logic
+                return obj switch
+                {
+                    char c => $"obj is char",
+                    int d => $"obj is int",
+                    bool b => $"obj is bool",
+                    _ => $"type unknown"
+                };
+            }
+
+            // performs boxing from value types to reference type 'object'
+            [teal]patternMatching[/]('A');       // char
+            [teal]patternMatching[/](true);      // bool
+            [teal]patternMatching[/](42);        // int
+            [teal]patternMatching[/](4.2);       // double
+            """
+        )
+    );
+
+    promptNext("");
+    renderWeakSeparator(Color.Green);
+
+    AnsiConsole.Write(
+        writePaddedText(
+            string.Join('\n', boxingFour())
+        )
+    );
+
+    promptNext("");
+    renderSeparator();
+}
+
+IEnumerable<string> boxingOne()
+{
+    int a = 4;
+    object b = a;         // implicit, the value '4' is copied into 'b' and stored on the heap
+    object c = (object)a; // explicit, the value '4' is copied into 'c' and stored on the heap
+
+    yield return $"b after boxing: {b}";
+    yield return $"type of b when calling b.GetType(): {b.GetType()}";
+    yield return string.Empty;
+    yield return $"c after boxing: {c}";
+    yield return $"type of c when calling c.GetType(): {c.GetType()}";
+}
+
+IEnumerable<string> boxingTwo()
+{
+    object d = 4.0;
+    double e = (double)d; // explicit
+
+    yield return $"type of d before unboxing when calling d.GetType(): {d.GetType()}";
+    yield return $"e after unboxing: {e}";
+}
+
+IEnumerable<string> boxingThree()
+{
+    // string.Format(string format, object? arg0, object? arg1, object? arg2);
+    string formatStr = string.Format(
+        format: "{0}, {1}, {2}",
+        arg0: "Hello, world!",      // reference type
+        arg1: true,                 // value type
+        arg2: 42                    // value type
+    );
+
+    yield return $"result of [teal]formatStr[/]: {formatStr}";
+}
+
+IEnumerable<string> boxingFour()
+{
+    string patternMatching(object obj)
+    {
+        return obj switch
+        {
+            char c => $"obj is char",
+            int d => $"obj is int",
+            bool b => $"obj is bool",
+            _ => $"type unknown"
+        };
+    }
+
+    yield return $"result of pattern matching char c: {patternMatching('A')}";
+    yield return $"result of pattern matching bool b: {patternMatching(true)}";
+    yield return $"result of pattern matching int i: {patternMatching(42)}";
+    yield return $"result of pattern matching double d: {patternMatching(4.2)}";
 }
 
 #endregion
