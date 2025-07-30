@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace code;
 
 public delegate void ConsoleLog(string s);

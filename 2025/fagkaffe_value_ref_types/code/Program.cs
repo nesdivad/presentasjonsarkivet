@@ -6,18 +6,19 @@ Console.CancelKeyPress += (_, _) => Console.CursorVisible = true;
 string[] baseChoices = [
     "1. Value types",
     "2. Reference types",
-    "3. ???"
+    "3. Exit"
 ];
 
 const string aMarkup = "[blue]a[/]";
 const string bMarkup = "[green]b[/]";
-const string refMarkup = "[lime]ref[/]";
+const string refMarkup = "[red]ref[/]";
 
 Start();
 
 void Start()
 {
-    while (true)
+    int index;
+    do
     {
         AnsiConsole.Clear();
         var choice = AnsiConsole.Prompt(
@@ -26,7 +27,7 @@ void Start()
                 .AddChoices(baseChoices)
         );
 
-        var index = Array.FindIndex(
+        index = Array.FindIndex(
             array: baseChoices,
             match: x => x.Equals(choice, StringComparison.OrdinalIgnoreCase)
         );
@@ -40,10 +41,11 @@ void Start()
                 referenceExamples();
                 break;
             case 2:
+            default:
                 break;
-            default: break;
         }
     }
+    while (index != 2);
 }
 
 #region [ Value types ]
@@ -56,6 +58,8 @@ void valueExamples()
             int {aMarkup} = 4;
             int {bMarkup} = {aMarkup};
             {aMarkup}++;
+
+            // b = ?
             """
         )
     );
@@ -78,6 +82,8 @@ void valueExamples()
             int {aMarkup} = 4;
             {refMarkup} int {bMarkup} = {refMarkup} {aMarkup};
             {aMarkup}++;
+
+            // b = ?
             """
         )
     );
@@ -101,6 +107,9 @@ void valueExamples()
             {refMarkup} int {bMarkup} = {refMarkup} {aMarkup};
             {aMarkup}++;
             {bMarkup}++;
+
+            // a = ?
+            // b = ?
             """
         )
     );
@@ -120,13 +129,15 @@ void valueExamples()
     AnsiConsole.Write(
         writePaddedText(
             """
-            void increment([lime]ref[/] int [green]toIncrement[/])
+            void increment([red]ref[/] int [green]toIncrement[/])
             {
                 [green]toIncrement[/]++;
             }
             
             int [blue]a[/] = 4;
-            increment([lime]ref[/] [blue]a[/]);
+            increment([red]ref[/] [blue]a[/]);
+
+            // a = ?
             """
         )
     );
@@ -148,8 +159,6 @@ void valueExamples()
 IEnumerable<string> valueOne()
 {
     int a = 4;
-    yield return $"{aMarkup} before increment: {a}";
-
     int b = a;
     a++;
 
@@ -160,7 +169,6 @@ IEnumerable<string> valueOne()
 string valueOnePointFive(bool secondIncrement = false)
 {
     int a = 4;
-    int aCopy = a;
     ref int b = ref a;
     a++;
 
@@ -171,7 +179,6 @@ string valueOnePointFive(bool secondIncrement = false)
 
     return
     $"""
-    {aMarkup} before increment: {aCopy}
     {aMarkup} after increment: {a}
     {bMarkup} after increment: {b}
     """;
@@ -181,12 +188,9 @@ string valueOnePointFive(bool secondIncrement = false)
 unsafe void valueTwo()
 {
     int a = 4;
-    log($"a before increment: {a}");
-
     int* aPtr = &a;
     *aPtr += 1;
     log($"a after increment: {a}");
-
     log($"address of a: {(long)aPtr:X}");
 }
 
@@ -195,7 +199,6 @@ unsafe void valueTwo()
 string valueThree()
 {
     int a = 4;
-    int aCopy = a;
     increment(ref a);
 
     void increment(ref int toIncrement)
@@ -203,11 +206,7 @@ string valueThree()
         toIncrement++;
     }
 
-    return
-    $"""
-    {aMarkup} before increment: {aCopy}
-    {aMarkup} after increment: {a}
-    """;
+    return $"{aMarkup} after increment: {a}";
 }
 
 #endregion
@@ -219,6 +218,14 @@ void referenceExamples()
     AnsiConsole.Write(
         writePaddedText(
             """
+            public class Person(string name, int age)
+            {
+                public string Name { get; set; } = name;
+                public int Age { get; set; } = age;
+
+                ...
+            }
+
             void [yellow]returnToTheTwenties[/](Person [teal]person[/])
             {
                 [teal]person[/].Age--;
@@ -230,6 +237,8 @@ void referenceExamples()
             );
 
             [yellow]returnToTheTwenties[/]([teal]person[/]);
+
+            // hvor gammel er [teal]person[/]?
             """
         )
     );
@@ -249,7 +258,7 @@ void referenceExamples()
     AnsiConsole.Write(
         writePaddedText(
             """
-            void [yellow]returnToTheTwenties[/]([lime]ref[/] Person [teal]person[/])
+            void [yellow]returnToTheTwenties[/]([red]ref[/] Person [teal]person[/])
             {
                 [teal]person[/].Age--;
             }
@@ -259,7 +268,9 @@ void referenceExamples()
                 age: 30
             );
 
-            [yellow]returnToTheTwenties[/]([lime]ref[/] [teal]person[/]);
+            [yellow]returnToTheTwenties[/]([red]ref[/] [teal]person[/]);
+
+            // hvor gammel er [teal]person[/]?
             """
         )
     );
@@ -299,8 +310,11 @@ void referenceExamples()
             int[[]] [teal]numbers[/] = [[100, 200, 300]];
             [orangered1]edit[/]([teal]numbers[/]);
 
-            int[[]] [teal]numbers2[/] = [[100, 200, 300]];
-            [red]edit2[/]([teal]numbers2[/]);
+            int[[]] [green]numbers2[/] = [[100, 200, 300]];
+            [red]edit2[/]([green]numbers2[/]);
+
+            // [teal]numbers[/] = ?
+            // [green]numbers2[/] = ?
             """
         )
     );
@@ -311,6 +325,50 @@ void referenceExamples()
     AnsiConsole.Write(
         writePaddedText(
             string.Join('\n', referenceThree())
+        )
+    );
+
+    promptNext("");
+    renderSeparator();
+
+    AnsiConsole.Write(
+        writePaddedText(
+            """
+            void [orangered1]edit[/](Person[[]] [teal]list[/])
+            {
+                for (int i = 0; i < [teal]list[/].Length; i++)
+                {
+                    Person person = [teal]list[/][[i]];
+                    person.Age--;
+                }
+            }
+            void [red]edit2[/](Person[[]] [teal]list[/])
+            {
+                for (int i = 0; i < [teal]list[/].Length; i++)
+                {
+                    int age = [teal]list[/][[i]].Age;
+                    age--;
+                }
+            }
+
+            Person[[]] [green]people[/] = [[new("Kristoffer", 30), new("Per", 90)]];
+            [orangered1]edit[/]([green]people[/]);
+
+            Person[[]] [yellow]people2[/] = [[new("Kristoffer", 30), new("Per", 90)]];
+            [red]edit2[/]([yellow]people2[/]);
+
+            // [green]people[/] = ?
+            // [yellow]people2[/] = ?
+            """
+        )
+    );
+
+    promptNext("");
+    renderWeakSeparator(Color.Green);
+
+    AnsiConsole.Write(
+        writePaddedText(
+            string.Join('\n', referenceFour())
         )
     );
 
@@ -330,11 +388,11 @@ IEnumerable<string> referenceOne()
         age: 30
     );
 
-    yield return $"[teal]person[/] before assignment: {person}";
+    yield return $"[teal]person[/] before change: {person}";
 
     returnToTheTwenties(person);
 
-    yield return $"[teal]person[/] after assignment: {person}";
+    yield return $"[teal]person[/] after change: {person}";
 }
 
 IEnumerable<string> referenceTwo()
@@ -379,13 +437,43 @@ IEnumerable<string> referenceThree()
 
     edit(numbers);
 
-    yield return $"list of numbers after [orangered1]edit[/]: {string.Join(", ", numbers)}";
+    yield return $"[teal]numbers[/] after [orangered1]edit[/]: {string.Join(", ", numbers)}";
 
     int[] numbers2 = [100, 200, 300];
 
     edit2(numbers2);
 
-    yield return $"list of numbers after [red]edit2[/]: {string.Join(", ", numbers2)}";
+    yield return $"[green]numbers2[/] after [red]edit2[/]: {string.Join(", ", numbers2)}";
+}
+
+IEnumerable<string> referenceFour()
+{
+    void edit(Person[] list)
+    {
+        for (int i = 0; i < list.Length; i++)
+        {
+            Person person = list[i];
+            person.Age--;
+        }
+    }
+
+    void edit2(Person[] list)
+    {
+        for (int i = 0; i < list.Length; i++)
+        {
+            int age = list[i].Age;
+            age--;
+        }
+    }
+
+    Person[] people = [new("Kristoffer", 30), new("Per", 90)];
+    edit(people);
+
+    Person[] people2 = [new("Kristoffer", 30), new("Per", 90)];
+    edit2(people2);
+
+    yield return $"[green]people[/] after change: {people.Print()}";
+    yield return $"[yellow]people2[/] after change: {people2.Print()}";
 }
 
 #endregion
