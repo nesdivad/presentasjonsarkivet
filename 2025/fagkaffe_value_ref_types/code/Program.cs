@@ -6,8 +6,9 @@ Console.CancelKeyPress += (_, _) => Console.CursorVisible = true;
 string[] baseChoices = [
     "1. Value types",
     "2. Reference types",
-    "3. Boxing / Unboxing",
-    "4. Exit"
+    "3. Boxing and Unboxing",
+    "4. Advanced examples",
+    "5. Exit"
 ];
 
 const string aMarkup = "[blue]a[/]";
@@ -44,11 +45,15 @@ void Start()
             case 2:
                 boxingUnboxingExamples();
                 break;
+            case 3:
+                advancedExamples();
+                break;
             default:
+                index = 100;
                 break;
         }
     }
-    while (index < 3);
+    while (index < 10);
 }
 
 #region [ Value types ]
@@ -649,6 +654,118 @@ IEnumerable<string> boxingFour()
     yield return $"result of pattern matching bool b: {patternMatching(true)}";
     yield return $"result of pattern matching int i: {patternMatching(42)}";
     yield return $"result of pattern matching double d: {patternMatching(4.2)}";
+}
+
+IEnumerable<string> boxingFiveGenerics()
+{
+    string patternMatching<T>(T obj)
+    {
+        return obj switch
+        {
+            char c => $"obj is char",
+            int d => $"obj is int",
+            bool b => $"obj is bool",
+            _ => $"type unknown"
+        };
+    }
+
+    yield return $"result of pattern matching char c: {patternMatching('A')}";
+    yield return $"result of pattern matching bool b: {patternMatching(true)}";
+    yield return $"result of pattern matching int i: {patternMatching(42)}";
+    yield return $"result of pattern matching double d: {patternMatching(4.2)}";
+}
+
+#endregion
+
+#region [ Advanced examples ]
+
+void advancedExamples()
+{
+    string[] advancedExampleChoices = [
+        "1. Structs",
+        "2. Exit"
+    ];
+
+    int index;
+
+    do
+    {
+        AnsiConsole.Clear();
+        var choice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Velg neste steg:")
+                .AddChoices(advancedExampleChoices)
+        );
+
+        index = Array.FindIndex(
+            array: advancedExampleChoices,
+            match: x => x.Equals(choice, StringComparison.OrdinalIgnoreCase)
+        );
+
+        switch (index)
+        {
+            case 0:
+                structExamples();
+                break;
+            default:
+                index = 100;
+                break;
+        }
+    }
+    while (index < 10);
+}
+
+void structExamples()
+{
+    AnsiConsole.Write(
+        writePaddedText(
+            """
+            public readonly struct [green]Coordinates[/](double x, double y)
+            {
+                public double X { get; init; } = x;
+                public double Y { get; init; } = y;
+            }
+            """
+        )
+    );
+
+    promptNext("");
+
+    AnsiConsole.Write(
+        writePaddedText(
+            """
+            [green]Coordinates[/] coords = new(x: 5.33, y: 60.37);
+            coords.X = 5.34; // [red]don't do this[/]
+            """
+        )
+    );
+
+    promptNext("");
+
+    AnsiConsole.Write(
+        writePaddedText(
+            "[green]Coordinates[/] updatedCoords = coords with { X = 5.34 }; // [green]do this[/]"
+        )
+    );
+
+    promptNext("");
+    renderSeparator();
+
+    AnsiConsole.Write(
+        writePaddedText(
+            """
+            public readonly struct CoordinatesWithLocation
+            {
+                public double X { get; init; }          // value type
+                public double Y { get; init; }          // value type
+                public string Location { get; init; }   // reference type
+            }
+            """
+        )
+    );
+
+    promptNext("");
+    renderSeparator();
 }
 
 #endregion
