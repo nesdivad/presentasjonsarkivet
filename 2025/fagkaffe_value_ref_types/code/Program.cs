@@ -683,7 +683,8 @@ void advancedExamples()
 {
     string[] advancedExampleChoices = [
         "1. Structs",
-        "2. Exit"
+        "2. Structs with inline arrays",
+        "Exit"
     ];
 
     int index;
@@ -706,6 +707,9 @@ void advancedExamples()
         {
             case 0:
                 structExamples();
+                break;
+            case 1:
+                structInlineArraysExamples();
                 break;
             default:
                 index = 100;
@@ -760,6 +764,74 @@ void structExamples()
                 public double Y { get; init; }          // value type
                 public string Location { get; init; }   // reference type
             }
+            """
+        )
+    );
+
+    promptNext("");
+    renderSeparator();
+}
+
+void structInlineArraysExamples()
+{
+    CoordinatesWithCharBuffer coordinates = new(x: 5.34, y: 60.37, location: "Solheimsgaten");
+
+    AnsiConsole.Write(
+        writePaddedText(
+            """
+            Example using a ref struct '[green]CoordinatesWithCharBuffer[/]', which prohibits the struct from escaping to the heap.
+            
+            The ref struct also contains a field of type '[green]CharBuffer[/]', which is decorated with an [yellow][[InlineArray]][/] attribute.
+            A struct with an [yellow][[InlineArray]][/] attribute creates an array that is stored on the stack. The type of the array is decided by the private field inside the struct, in our case a [teal]char[/].
+            """
+        )
+    );
+
+    AnsiConsole.Write(
+        writePaddedText(
+            """
+            public ref struct [green]CoordinatesWithCharBuffer[/] : ICoordinates
+            {
+                public double X { get; init; }
+                public double Y { get; init; }            
+                public ReadOnlySpan<char> Location { get => location.AsReadonlySpan(); }
+                private CharBuffer location;
+
+                public CoordinatesWithCharBuffer(double x, double y, string location)
+                {
+                    X = x; Y = y; this.location = default;
+
+                    int len = Math.Min(location.Length, 31);
+                    for (int i = 0; i < len; i++)
+                    {
+                        this.location[[i]] = location[[i]];
+                    }
+
+                    if (len < 32) this.location[[len]] = '\0';
+                }
+                ...
+            }
+
+            [[InlineArray(32)]]
+            public struct [green]CharBuffer[/]
+            {
+                private char _element;
+                
+                ...
+            }
+            """
+        )
+    );
+
+    promptNext("");
+    renderWeakSeparator(Color.Green);
+
+    AnsiConsole.Write(
+        writePaddedText(
+            $"""
+            [green]CoordinatesWithCharBuffer[/] coordinates = new(x: 5.34, y: 60.37, location: "Solheimsgaten");
+            
+            ToString(): {coordinates.ToString()}
             """
         )
     );

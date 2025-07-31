@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace code;
 
@@ -32,4 +33,41 @@ public readonly struct CoordinatesWithLocation : ICoordinates
     public double X { get; init; }
     public double Y { get; init; }
     public string Location { get; init; }
+}
+
+public ref struct CoordinatesWithCharBuffer : ICoordinates
+{
+    public double X { get; init; }
+    public double Y { get; init; }
+    public ReadOnlySpan<char> Location { get => location.AsReadonlySpan(); }
+    private CharBuffer location;
+
+    public CoordinatesWithCharBuffer(double x, double y, string location)
+    {
+        X = x; Y = y; this.location = default;
+
+        int len = Math.Min(location.Length, 31);
+        for (int i = 0; i < len; i++)
+        {
+            this.location[i] = location[i];
+        }
+
+        if (len < 32) this.location[len] = '\0';
+    }
+
+    public override string ToString()
+    {
+        return $"(x: {X}, y: {Y}) - {Location}";
+    }
+}
+
+[InlineArray(32)]
+public struct CharBuffer
+{
+    private char _element;
+
+    public ReadOnlySpan<char> AsReadonlySpan()
+    {
+        return MemoryMarshal.CreateReadOnlySpan(ref _element, 32);
+    }
 }
