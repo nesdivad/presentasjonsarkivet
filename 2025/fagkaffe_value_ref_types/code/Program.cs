@@ -132,7 +132,7 @@ void valueExamples()
     );
 
     promptNext("");
-    renderSeparator();
+    AnsiConsole.Clear();
 
     AnsiConsole.Write(
         writePaddedText(
@@ -261,7 +261,7 @@ void referenceExamples()
     );
 
     promptNext("");
-    renderSeparator();
+    AnsiConsole.Clear();
 
     AnsiConsole.Write(
         writePaddedText(
@@ -293,7 +293,7 @@ void referenceExamples()
     );
 
     promptNext("");
-    renderSeparator();
+    AnsiConsole.Clear();
 
     AnsiConsole.Write(
         writePaddedText(
@@ -337,7 +337,7 @@ void referenceExamples()
     );
 
     promptNext("");
-    renderSeparator();
+    AnsiConsole.Clear();
 
     AnsiConsole.Write(
         writePaddedText(
@@ -493,12 +493,12 @@ void boxingUnboxingExamples()
     AnsiConsole.Write(
         writePaddedText(
             """
-            int a = 4;
-            object b = a;         // implicit boxing
-            object c = (object)a; // explicit boxing
+            int [teal]a[/] = 4;
+            object [green]b[/] = [teal]a[/];         // implicit boxing
+            object [orangered1]c[/] = (object) [teal]a[/]; // explicit boxing
 
-            // b = ?
-            // c = ?
+            // [green]b[/] = ?
+            // [orangered1]c[/] = ?
             """
         )
     );
@@ -518,8 +518,8 @@ void boxingUnboxingExamples()
     AnsiConsole.Write(
         writePaddedText(
             """
-            object d = 4.0;
-            double e = (double)d; // explicit
+            object [teal]d[/] = 4.0;
+            double [green]e[/] = (double) [teal]d[/]; // explicit
 
             // only explicit casts are available when unboxing
             """
@@ -536,7 +536,7 @@ void boxingUnboxingExamples()
     );
 
     promptNext("");
-    renderSeparator();
+    AnsiConsole.Clear();
 
     AnsiConsole.Write(
         writePaddedText(
@@ -562,7 +562,7 @@ void boxingUnboxingExamples()
     );
 
     promptNext("");
-    renderSeparator();
+    AnsiConsole.Clear();
 
     AnsiConsole.Write(
         writePaddedText(
@@ -573,9 +573,9 @@ void boxingUnboxingExamples()
                 // implicit unboxing done by internal pattern matching logic
                 return obj switch
                 {
-                    char c => $"obj is char",
-                    int d => $"obj is int",
-                    bool b => $"obj is bool",
+                    char c => $"obj is char: {c}, {c.GetType()}",
+                    int d => $"obj is int: {d}, {d.GetType()}",
+                    bool b => $"obj is bool: {b}, {b.GetType()}",
                     _ => $"type unknown"
                 };
             }
@@ -608,11 +608,11 @@ IEnumerable<string> boxingOne()
     object b = a;         // implicit, the value '4' is copied into 'b' and stored on the heap
     object c = (object)a; // explicit, the value '4' is copied into 'c' and stored on the heap
 
-    yield return $"b after boxing: {b}";
-    yield return $"type of b when calling b.GetType(): {b.GetType()}";
+    yield return $"[green]b[/] after boxing: {b}";
+    yield return $"type of [green]b[/] when calling [green]b[/].GetType(): {b.GetType()}";
     yield return string.Empty;
-    yield return $"c after boxing: {c}";
-    yield return $"type of c when calling c.GetType(): {c.GetType()}";
+    yield return $"[red]c[/] after boxing: {c}";
+    yield return $"type of [red]c[/] when calling [red]c[/].GetType(): {c.GetType()}";
 }
 
 IEnumerable<string> boxingTwo()
@@ -620,8 +620,8 @@ IEnumerable<string> boxingTwo()
     object d = 4.0;
     double e = (double)d; // explicit
 
-    yield return $"type of d before unboxing when calling d.GetType(): {d.GetType()}";
-    yield return $"e after unboxing: {e}";
+    yield return $"type of [teal]d[/] before unboxing when calling [teal]d[/].GetType(): {d.GetType()}";
+    yield return $"[green]e[/] after unboxing: {e}";
 }
 
 IEnumerable<string> boxingThree()
@@ -643,9 +643,9 @@ IEnumerable<string> boxingFour()
     {
         return obj switch
         {
-            char c => $"obj is char",
-            int d => $"obj is int",
-            bool b => $"obj is bool",
+            char c => $"obj is char: {c}, {c.GetType()}",
+            int d => $"obj is int: {d}, {d.GetType()}",
+            bool b => $"obj is bool: {b}, {b.GetType()}",
             _ => $"type unknown"
         };
     }
@@ -656,24 +656,6 @@ IEnumerable<string> boxingFour()
     yield return $"result of pattern matching double d: {patternMatching(4.2)}";
 }
 
-IEnumerable<string> boxingFiveGenerics()
-{
-    string patternMatching<T>(T obj)
-    {
-        return obj switch
-        {
-            char c => $"obj is char",
-            int d => $"obj is int",
-            bool b => $"obj is bool",
-            _ => $"type unknown"
-        };
-    }
-
-    yield return $"result of pattern matching char c: {patternMatching('A')}";
-    yield return $"result of pattern matching bool b: {patternMatching(true)}";
-    yield return $"result of pattern matching int i: {patternMatching(42)}";
-    yield return $"result of pattern matching double d: {patternMatching(4.2)}";
-}
 
 #endregion
 
