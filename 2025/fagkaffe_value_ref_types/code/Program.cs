@@ -60,6 +60,23 @@ void Start()
 
 void valueExamples()
 {
+    AnsiConsole.Write(new Rule("Value types (verdityper?)").SquareBorder().RuleStyle(Color.Teal));
+    AnsiConsole.Write(
+        writePaddedText(
+            """
+            En variabel som har typen [green]value type[/] inneholder data direkte.
+            Dette kjennetegner en [green]value type[/]:
+            - Verdien til en variabel blir [bold]kopiert[/] når den settes lik en annen variabel, som et argument i en funksjon, eller når et funksjonskall returnerer en verdi.
+            - C# har noen innebygde typer (også kalt simple types): int, double, char, bool m.m.
+            - Du kan også lage egne [green]value types[/] ved å bruke [yellow]structs[/].
+            - Verdien blir lagret i [orangered1]stack[/]-minne.
+            """
+        )
+    );
+
+    promptNext("");
+    AnsiConsole.Write(new Rule().SquareBorder().RuleStyle("dim"));
+
     AnsiConsole.Write(
         writePaddedText(
             $"""
@@ -490,6 +507,19 @@ IEnumerable<string> referenceFour()
 
 void boxingUnboxingExamples()
 {
+    AnsiConsole.Write(new Rule("Boxing").SquareBorder().RuleStyle(Color.Teal));
+    AnsiConsole.Write(
+        writePaddedText(
+            """
+            [bold]Boxing[/] er prosessen for å konvertere en [green]value type[/] til [teal]object[/] eller en type som implementerer [teal]object[/].
+            Boxing kan være både implisitt (uten cast) eller eksplisitt (med cast).
+            """
+        )
+    );
+
+    promptNext("");
+    AnsiConsole.Write(new Rule().SquareBorder().RuleStyle("dim"));
+
     AnsiConsole.Write(
         writePaddedText(
             """
@@ -512,8 +542,21 @@ void boxingUnboxingExamples()
         )
     );
 
+
     promptNext("");
-    renderSeparator();
+    AnsiConsole.Clear();
+    AnsiConsole.Write(new Rule("Unboxing").SquareBorder().RuleStyle(Color.Teal));
+    AnsiConsole.Write(
+        writePaddedText(
+            """
+            Unboxing er en konvertering fra [teal]object[/] til en [green]value type[/].
+            Konverteringen må skje eksplisitt, det betyr at det må utføres en cast til riktig [green]value type[/].
+            """
+        )
+    );
+
+    promptNext("");
+    AnsiConsole.Write(new Rule().SquareBorder().RuleStyle("dim"));
 
     AnsiConsole.Write(
         writePaddedText(
@@ -538,15 +581,16 @@ void boxingUnboxingExamples()
     promptNext("");
     AnsiConsole.Clear();
 
+    AnsiConsole.Write(new Rule("Eksempel på boxing i funksjonskall").SquareBorder().RuleStyle(Color.Teal));
     AnsiConsole.Write(
         writePaddedText(
             """
             // string.Format(string format, object? arg0, object? arg1, object? arg2);
             string [teal]formatStr[/] = string.Format(
                 format: "{0}, {1}, {2}",
-                arg0: "Hello, world!",      // reference type
-                arg1: true,                 // value type
-                arg2: 42                    // value type
+                arg0:   "Hello, world!",      // reference type
+                arg1:   true,                 // value type
+                arg2:   42                    // value type
             );
             """
         )
@@ -564,42 +608,42 @@ void boxingUnboxingExamples()
     promptNext("");
     AnsiConsole.Clear();
 
-    AnsiConsole.Write(
-        writePaddedText(
-            """
-            string [teal]patternMatching[/](object obj)
-            {
-                // if obj is pattern matched, perform unboxing to value type
-                // implicit unboxing done by internal pattern matching logic
-                return obj switch
-                {
-                    char c => $"obj is char: {c}, {c.GetType()}",
-                    int d => $"obj is int: {d}, {d.GetType()}",
-                    bool b => $"obj is bool: {b}, {b.GetType()}",
-                    _ => $"type unknown"
-                };
-            }
+   // AnsiConsole.Write(
+   //     writePaddedText(
+   //         """
+   //         string [teal]patternMatching[/](object obj)
+   //         {
+   //             // if obj is pattern matched, perform unboxing to value type
+   //             // implicit unboxing done by internal pattern matching logic
+   //             return obj switch
+   //             {
+   //                 char c => $"obj is char: {c}, {c.GetType()}",
+   //                 int d => $"obj is int: {d}, {d.GetType()}",
+   //                 bool b => $"obj is bool: {b}, {b.GetType()}",
+   //                 _ => $"type unknown"
+   //             };
+   //         }
 
-            // performs boxing from value types to reference type 'object'
-            [teal]patternMatching[/]('A');       // char
-            [teal]patternMatching[/](true);      // bool
-            [teal]patternMatching[/](42);        // int
-            [teal]patternMatching[/](4.2);       // double
-            """
-        )
-    );
+   //         // performs boxing from value types to reference type 'object'
+   //         [teal]patternMatching[/]('A');       // char
+   //         [teal]patternMatching[/](true);      // bool
+   //         [teal]patternMatching[/](42);        // int
+   //         [teal]patternMatching[/](4.2);       // double
+   //         """
+   //     )
+   // );
 
-    promptNext("");
-    renderWeakSeparator(Color.Green);
+   // promptNext("");
+   // renderWeakSeparator(Color.Green);
 
-    AnsiConsole.Write(
-        writePaddedText(
-            string.Join('\n', boxingFour())
-        )
-    );
+   // AnsiConsole.Write(
+   //     writePaddedText(
+   //         string.Join('\n', boxingFour())
+   //     )
+   // );
 
-    promptNext("");
-    renderSeparator();
+   // promptNext("");
+   // renderSeparator();
 }
 
 IEnumerable<string> boxingOne()
@@ -626,15 +670,21 @@ IEnumerable<string> boxingTwo()
 
 IEnumerable<string> boxingThree()
 {
+    string helloWorld = "Hello, world!";
+    bool b = true;
+    int fortytwo = 42;
     // string.Format(string format, object? arg0, object? arg1, object? arg2);
     string formatStr = string.Format(
         format: "{0}, {1}, {2}",
-        arg0: "Hello, world!",      // reference type
-        arg1: true,                 // value type
-        arg2: 42                    // value type
+        arg0: helloWorld,      // reference type
+        arg1: b,               // value type
+        arg2: fortytwo         // value type
     );
 
-    yield return $"result of [teal]formatStr[/]: {formatStr}";
+    yield return $"result of [teal]formatStr[/]: {formatStr}\n";
+    yield return $"arg0 is type: {helloWorld.GetType()}, doesn't need boxing.";
+    yield return $"arg1 is type: {b.GetType()}, needs boxing.";
+    yield return $"arg2 is type: {fortytwo.GetType()}, needs boxing.";
 }
 
 IEnumerable<string> boxingFour()
