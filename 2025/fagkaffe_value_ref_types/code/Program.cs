@@ -67,7 +67,7 @@ void valueExamples()
             En variabel som har typen [green]value type[/] inneholder data direkte.
             Dette kjennetegner en [green]value type[/]:
             - Verdien til en variabel blir [bold]kopiert[/] når den settes lik en annen variabel, som et argument i en funksjon, eller når et funksjonskall returnerer en verdi.
-            - C# har noen innebygde typer (også kalt simple types): int, double, char, bool m.m.
+            - C# har noen innebygde [green]value types[/] (også kalt simple types): int, double, char, bool m.m.
             - Du kan også lage egne [green]value types[/] ved å bruke [yellow]structs[/].
             - Verdien blir lagret i [orangered1]stack[/]-minne.
             """
@@ -103,9 +103,46 @@ void valueExamples()
 
     AnsiConsole.Write(
         writePaddedText(
+            """
+            void increment(int [green]toIncrement[/])
+            {
+                [green]toIncrement[/]++;
+            }
+            
+            int [blue]a[/] = 4;
+            increment([blue]a[/]);
+
+            // a = ?
+            """
+        )
+    );
+
+    promptNext("");
+    renderWeakSeparator(Color.Green);
+
+    AnsiConsole.Write(writePaddedText(string.Join('\n', valueOnePointTwo())));
+
+    promptNext("");
+    AnsiConsole.Clear();
+
+    AnsiConsole.Write(new Rule("ref keyword").SquareBorder().RuleStyle(Color.Teal));
+    AnsiConsole.Write(
+        writePaddedText(
             $"""
-            int {aMarkup} = 4;
-            {refMarkup} int {bMarkup} = {refMarkup} {aMarkup};
+            {refMarkup} brukes for å sende en variabel som [yellow]referanse[/] til en funksjon eller når den settes lik en annen variabel.
+            En [yellow]referanse[/] er en adresse til et område i programmets minne.
+            """
+        )
+    );
+
+    promptNext("");
+    AnsiConsole.Write(new Rule().SquareBorder().RuleStyle("dim"));
+
+    AnsiConsole.Write(
+        writePaddedText(
+            $"""
+            int {aMarkup} = 4;         // Inneholder data direkte
+            {refMarkup} int {bMarkup} = {refMarkup} {aMarkup}; // Inneholder ikke data direkte, men en [yellow]referanse[/] til {aMarkup}
             {aMarkup}++;
 
             // b = ?
@@ -125,31 +162,31 @@ void valueExamples()
     promptNext("");
     renderSeparator();
 
-    AnsiConsole.Write(
-        writePaddedText(
-            $"""
-            int {aMarkup} = 4;
-            {refMarkup} int {bMarkup} = {refMarkup} {aMarkup};
-            {aMarkup}++;
-            {bMarkup}++;
+   // AnsiConsole.Write(
+   //     writePaddedText(
+   //         $"""
+   //         int {aMarkup} = 4;
+   //         {refMarkup} int {bMarkup} = {refMarkup} {aMarkup};
+   //         {aMarkup}++;
+   //         {bMarkup}++;
 
-            // a = ?
-            // b = ?
-            """
-        )
-    );
+   //         // a = ?
+   //         // b = ?
+   //         """
+   //     )
+   // );
 
-    promptNext("");
-    renderWeakSeparator(Color.Green);
+   // promptNext("");
+   // renderWeakSeparator(Color.Green);
 
-    AnsiConsole.Write(
-        writePaddedText(
-            valueOnePointFive(secondIncrement: true)
-        )
-    );
+   // AnsiConsole.Write(
+   //     writePaddedText(
+   //         valueOnePointFive(secondIncrement: true)
+   //     )
+   // );
 
-    promptNext("");
-    AnsiConsole.Clear();
+   // promptNext("");
+   // AnsiConsole.Clear();
 
     AnsiConsole.Write(
         writePaddedText(
@@ -189,6 +226,19 @@ IEnumerable<string> valueOne()
 
     yield return $"{aMarkup} after increment: {a}";
     yield return $"{bMarkup} after increment: {b}";
+}
+
+IEnumerable<string> valueOnePointTwo()
+{
+    void increment(int toIncrement)
+    {
+        toIncrement++;
+    }
+
+    int a = 4;
+    increment(a);
+
+    yield return $"{aMarkup} after increment: {a}";
 }
 
 string valueOnePointFive(bool secondIncrement = false)
@@ -240,6 +290,21 @@ string valueThree()
 
 void referenceExamples()
 {
+    AnsiConsole.Write(new Rule("Reference types (referansetyper?)").SquareBorder().RuleStyle(Color.Teal));
+    AnsiConsole.Write(
+        writePaddedText(
+            """
+            [green]reference types[/] er typer hvor variabelen ikke inneholder data direkte, men en [yellow]referanse[/] til verdien i programmets minne.
+            Eksempler på [green]reference types[/] i C#: class, interface, string, arrays m.m.
+            C# har noen innebygde [green]reference types[/]: object, string, dynamic m.m. 
+            [yellow]referansen[/] lagres i [orangered1]stack[/]-minne, mens selve verdien lagres i [mediumpurple2]heap[/]-minne.
+            """
+        )  
+    );
+
+    promptNext("");
+    AnsiConsole.Write(new Rule().SquareBorder().RuleStyle("dim"));
+
     AnsiConsole.Write(
         writePaddedText(
             """
@@ -247,11 +312,9 @@ void referenceExamples()
             {
                 public string Name { get; set; } = name;
                 public int Age { get; set; } = age;
-
-                ...
             }
 
-            void [yellow]returnToTheTwenties[/](Person [teal]person[/])
+            void returnToTheTwenties(Person [teal]person[/])
             {
                 [teal]person[/].Age--;
             }
@@ -261,7 +324,7 @@ void referenceExamples()
                 age: 30
             );
 
-            [yellow]returnToTheTwenties[/]([teal]person[/]);
+            returnToTheTwenties([teal]person[/]);
 
             // hvor gammel er [teal]person[/]?
             """
@@ -280,37 +343,37 @@ void referenceExamples()
     promptNext("");
     AnsiConsole.Clear();
 
-    AnsiConsole.Write(
-        writePaddedText(
-            """
-            void [yellow]returnToTheTwenties[/]([red]ref[/] Person [teal]person[/])
-            {
-                [teal]person[/].Age--;
-            }
+   // AnsiConsole.Write(
+   //     writePaddedText(
+   //         """
+   //         void returnToTheTwenties([red]ref[/] Person [teal]person[/])
+   //         {
+   //             [teal]person[/].Age--;
+   //         }
 
-            Person [teal]person[/] = new(
-                name: "Kristoffer",
-                age: 30
-            );
+   //         Person [teal]person[/] = new(
+   //             name: "Kristoffer",
+   //             age: 30
+   //         );
 
-            [yellow]returnToTheTwenties[/]([red]ref[/] [teal]person[/]);
+   //         returnToTheTwenties([red]ref[/] [teal]person[/]);
 
-            // hvor gammel er [teal]person[/]?
-            """
-        )
-    );
+   //         // hvor gammel er [teal]person[/]?
+   //         """
+   //     )
+   // );
 
-    promptNext("");
-    renderWeakSeparator(Color.Green);
+   // promptNext("");
+   // renderWeakSeparator(Color.Green);
 
-    AnsiConsole.Write(
-        writePaddedText(
-            string.Join('\n', referenceTwo())
-        )
-    );
+   // AnsiConsole.Write(
+   //     writePaddedText(
+   //         string.Join('\n', referenceTwo())
+   //     )
+   // );
 
-    promptNext("");
-    AnsiConsole.Clear();
+   // promptNext("");
+   // AnsiConsole.Clear();
 
     AnsiConsole.Write(
         writePaddedText(
@@ -367,23 +430,11 @@ void referenceExamples()
                     person.Age--;
                 }
             }
-            void [red]edit2[/](Person[[]] [teal]list[/])
-            {
-                for (int i = 0; i < [teal]list[/].Length; i++)
-                {
-                    int age = [teal]list[/][[i]].Age;
-                    age--;
-                }
-            }
 
             Person[[]] [green]people[/] = [[new("Kristoffer", 30), new("Per", 90)]];
             [orangered1]edit[/]([green]people[/]);
 
-            Person[[]] [yellow]people2[/] = [[new("Kristoffer", 30), new("Per", 90)]];
-            [red]edit2[/]([yellow]people2[/]);
-
             // [green]people[/] = ?
-            // [yellow]people2[/] = ?
             """
         )
     );
@@ -398,7 +449,18 @@ void referenceExamples()
     );
 
     promptNext("");
-    renderSeparator();
+    AnsiConsole.Clear();
+
+    AnsiConsole.Write(new Rule("strings").SquareBorder().RuleStyle(Color.Teal));
+    AnsiConsole.Write(
+        writePaddedText(
+            """
+            [teal]string[/] er en reference type, men oppfører seg ofte som en [green]value type[/].
+            [teal]string[/] er immutable, du kan ikke endre den etter opprettelse.
+
+            """
+        )
+    );
 }
 
 IEnumerable<string> referenceOne()
@@ -453,13 +515,13 @@ IEnumerable<string> referenceThree()
     {
         for (int i = 0; i < list.Length; i++)
         {
-            int target = list[i];
+            ref int target = ref list[i];
             target++;
+            //list[i] = target;
         }
     }
 
     int[] numbers = [100, 200, 300];
-
     edit(numbers);
 
     yield return $"[teal]numbers[/] after [orangered1]edit[/]: {string.Join(", ", numbers)}";
@@ -482,24 +544,30 @@ IEnumerable<string> referenceFour()
         }
     }
 
-    void edit2(Person[] list)
-    {
-        for (int i = 0; i < list.Length; i++)
-        {
-            int age = list[i].Age;
-            age--;
-        }
-    }
+   // void edit2(Person[] list)
+   // {
+   //     for (int i = 0; i < list.Length; i++)
+   //     {
+   //         int age = list[i].Age;
+   //         age--;
+   //     }
+   // }
 
     Person[] people = [new("Kristoffer", 30), new("Per", 90)];
     edit(people);
 
-    Person[] people2 = [new("Kristoffer", 30), new("Per", 90)];
-    edit2(people2);
+   // Person[] people2 = [new("Kristoffer", 30), new("Per", 90)];
+   // edit2(people2);
 
     yield return $"[green]people[/] after change: {people.Print()}";
-    yield return $"[yellow]people2[/] after change: {people2.Print()}";
+   // yield return $"[yellow]people2[/] after change: {people2.Print()}";
 }
+
+IEnumerable<string> referenceFive()
+{
+    yield return "";
+}
+    
 
 #endregion
 
@@ -511,7 +579,8 @@ void boxingUnboxingExamples()
     AnsiConsole.Write(
         writePaddedText(
             """
-            [bold]Boxing[/] er prosessen for å konvertere en [green]value type[/] til [teal]object[/] eller en type som implementerer [teal]object[/].
+            [bold]Boxing[/] er prosessen for å konvertere en [green]value type[/] til en reference type [teal]object[/] eller en type som implementerer [teal]object[/].
+            Ved boxing av en [green]value type[/], blir det opprettet et [mediumpurple2]heap[/]-allokert objekt som beholder den opprinnelige typen.
             Boxing kan være både implisitt (uten cast) eller eksplisitt (med cast).
             """
         )
@@ -524,7 +593,7 @@ void boxingUnboxingExamples()
         writePaddedText(
             """
             int [teal]a[/] = 4;
-            object [green]b[/] = [teal]a[/];         // implicit boxing
+            object [green]b[/] = [teal]a[/];          // implicit boxing
             object [orangered1]c[/] = (object) [teal]a[/]; // explicit boxing
 
             // [green]b[/] = ?
@@ -549,7 +618,7 @@ void boxingUnboxingExamples()
     AnsiConsole.Write(
         writePaddedText(
             """
-            Unboxing er en konvertering fra [teal]object[/] til en [green]value type[/].
+            Unboxing er en konvertering fra reference type [teal]object[/] til en [green]value type[/].
             Konverteringen må skje eksplisitt, det betyr at det må utføres en cast til riktig [green]value type[/].
             """
         )
@@ -561,10 +630,8 @@ void boxingUnboxingExamples()
     AnsiConsole.Write(
         writePaddedText(
             """
-            object [teal]d[/] = 4.0;
+            object [teal]d[/] = 4.2;
             double [green]e[/] = (double) [teal]d[/]; // explicit
-
-            // only explicit casts are available when unboxing
             """
         )
     );
@@ -661,11 +728,11 @@ IEnumerable<string> boxingOne()
 
 IEnumerable<string> boxingTwo()
 {
-    object d = 4.0;
-    double e = (double)d; // explicit
+    object d = 4.2;
+    double e = (double) d; // explicit
 
     yield return $"type of [teal]d[/] before unboxing when calling [teal]d[/].GetType(): {d.GetType()}";
-    yield return $"[green]e[/] after unboxing: {e}";
+    yield return $"[green]e[/] after unboxing: {e.ToString("F1")}";
 }
 
 IEnumerable<string> boxingThree()
