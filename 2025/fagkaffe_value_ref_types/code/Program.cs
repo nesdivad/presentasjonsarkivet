@@ -4,14 +4,15 @@ using Spectre.Console;
 ConsoleLog log = AnsiConsole.MarkupLine;
 Console.CancelKeyPress += (_, _) => Console.CursorVisible = true;
 string[] baseChoices = [
-    "1. Value types",
-    "2. Reference types",
-    "3. Boxing and Unboxing",
-    "4. Advanced examples",
-    "5. Exit"
+    "1. Intro",
+    "2. Value types",
+    "3. Reference types",
+    "4. Boxing and Unboxing",
+    "5. Advanced examples",
+    "Exit"
 ];
 
-const string aMarkup = "[blue]a[/]";
+const string aMarkup = "[teal]a[/]";
 const string bMarkup = "[green]b[/]";
 const string refMarkup = "[red]ref[/]";
 
@@ -37,15 +38,18 @@ void Start()
         switch (index)
         {
             case 0:
-                valueExamples();
+                intro();
                 break;
             case 1:
-                referenceExamples();
+                valueExamples();
                 break;
             case 2:
-                boxingUnboxingExamples();
+                referenceExamples();
                 break;
             case 3:
+                boxingUnboxingExamples();
+                break;
+            case 4:
                 advancedExamples();
                 break;
             default:
@@ -55,6 +59,51 @@ void Start()
     }
     while (index < 10);
 }
+
+#region [ Intro ]
+
+void intro()
+{
+    AnsiConsole.Write(new Rule("Typer i C#").SquareBorder().RuleStyle(Color.Teal));
+    AnsiConsole.Write(
+        writePaddedText(
+            """
+            Ting om introen skal hit:
+
+            ...
+            """
+        )
+    );
+
+    promptNext("");
+
+    AnsiConsole.Write(
+        writePaddedText(
+            """
+            - [purple]Type[/]: Måten vi klassifiserer data i C#. Alle variabler må ha en type. Typen sier noe om hvilke data variabelen kan inneholde og hvilke operasjoner vi kan utføre på den.
+            - Programminne: Det finnes to typer programminne, [orangered1]stack[/]- og [mediumpurple2]heap[/]-minne. 
+                [orangered1]stack[/] er raskt, men har lite lagringsplass.
+                [mediumpurple2]heap[/]-minne er tregt, men har masse plass til lagring av data.
+            """
+        )
+    );
+
+    promptNext("");
+
+    Stack<int> stack = new(capacity: 8);
+    stack.Push(0x12);
+    stack.Push(0x32);
+    stack.Push(0x1a);
+    stack.Push(0x56);
+    stack.Push(0x128);
+
+    AnsiConsole.Write(ConsoleHelper.RenderStack(stack, stack.Capacity));
+    AnsiConsole.Write(ConsoleHelper.RenderHeap(["20", "39", "53", "0xaa", "542", "0xff"]));
+
+    promptNext("");
+}
+
+#endregion
 
 #region [ Value types ]
 
@@ -109,8 +158,8 @@ void valueExamples()
                 [green]toIncrement[/]++;
             }
             
-            int [blue]a[/] = 4;
-            increment([blue]a[/]);
+            int [teal]a[/] = 4;
+            increment([teal]a[/]);
 
             // a = ?
             """
@@ -196,8 +245,8 @@ void valueExamples()
                 [green]toIncrement[/]++;
             }
             
-            int [blue]a[/] = 4;
-            increment([red]ref[/] [blue]a[/]);
+            int [teal]a[/] = 4;
+            increment([red]ref[/] [teal]a[/]);
 
             // a = ?
             """
