@@ -3,13 +3,14 @@ using Spectre.Console;
 
 ConsoleLog log = AnsiConsole.MarkupLine;
 Console.CancelKeyPress += (_, _) => Console.CursorVisible = true;
-string[] baseChoices = [
+string[] baseChoices =
+[
     "1. Intro",
     "2. Value types",
     "3. Reference types",
     "4. Boxing and Unboxing",
     "5. Advanced examples",
-    "Exit"
+    "Exit",
 ];
 
 const string aMarkup = "[teal]a[/]";
@@ -25,9 +26,7 @@ void Start()
     {
         AnsiConsole.Clear();
         var choice = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .Title("Velg neste steg:")
-                .AddChoices(baseChoices)
+            new SelectionPrompt<string>().Title("Velg neste steg:").AddChoices(baseChoices)
         );
 
         index = Array.FindIndex(
@@ -56,8 +55,7 @@ void Start()
                 index = 100;
                 break;
         }
-    }
-    while (index < 10);
+    } while (index < 10);
 }
 
 #region [ Intro ]
@@ -81,24 +79,21 @@ void intro()
         writePaddedText(
             """
             - [purple]Type[/]: Måten vi klassifiserer data i C#. Alle variabler må ha en type. Typen sier noe om hvilke data variabelen kan inneholde og hvilke operasjoner vi kan utføre på den.
-            - Programminne: Det finnes to typer programminne, [orangered1]stack[/]- og [mediumpurple2]heap[/]-minne. 
-                [orangered1]stack[/] er raskt, men har lite lagringsplass.
-                [mediumpurple2]heap[/]-minne er tregt, men har masse plass til lagring av data.
             """
         )
     );
 
     promptNext("");
 
-    Stack<int> stack = new(capacity: 8);
-    stack.Push(0x12);
-    stack.Push(0x32);
-    stack.Push(0x1a);
-    stack.Push(0x56);
-    stack.Push(0x128);
-
-    AnsiConsole.Write(ConsoleHelper.RenderStack(stack, stack.Capacity));
-    AnsiConsole.Write(ConsoleHelper.RenderHeap(["20", "39", "53", "0xaa", "542", "0xff"]));
+    AnsiConsole.Write(
+        writePaddedText(
+            """
+            - [darkorange]Programminne[/]: Det finnes to typer programminne, [orangered1]stack[/]- og [mediumpurple2]heap[/]-minne. 
+                [orangered1]stack[/]-minne er raskt, men har lite lagringsplass.
+                [mediumpurple2]heap[/]-minne er tregt, men har masse plass til lagring av data.
+            """
+        )
+    );
 
     promptNext("");
 }
@@ -141,11 +136,7 @@ void valueExamples()
     promptNext("");
     renderWeakSeparator(Color.Green);
 
-    AnsiConsole.Write(
-        writePaddedText(
-            string.Join('\n', valueOne())
-        )
-    );
+    AnsiConsole.Write(writePaddedText(string.Join('\n', valueOne())));
 
     promptNext("");
     renderSeparator();
@@ -157,7 +148,7 @@ void valueExamples()
             {
                 [green]toIncrement[/]++;
             }
-            
+
             int [teal]a[/] = 4;
             increment([teal]a[/]);
 
@@ -202,40 +193,36 @@ void valueExamples()
     promptNext("");
     renderWeakSeparator(Color.Green);
 
-    AnsiConsole.Write(
-        writePaddedText(
-            valueOnePointFive()
-        )
-    );
+    AnsiConsole.Write(writePaddedText(valueOnePointFive()));
 
     promptNext("");
     renderSeparator();
 
-   // AnsiConsole.Write(
-   //     writePaddedText(
-   //         $"""
-   //         int {aMarkup} = 4;
-   //         {refMarkup} int {bMarkup} = {refMarkup} {aMarkup};
-   //         {aMarkup}++;
-   //         {bMarkup}++;
+    // AnsiConsole.Write(
+    //     writePaddedText(
+    //         $"""
+    //         int {aMarkup} = 4;
+    //         {refMarkup} int {bMarkup} = {refMarkup} {aMarkup};
+    //         {aMarkup}++;
+    //         {bMarkup}++;
 
-   //         // a = ?
-   //         // b = ?
-   //         """
-   //     )
-   // );
+    //         // a = ?
+    //         // b = ?
+    //         """
+    //     )
+    // );
 
-   // promptNext("");
-   // renderWeakSeparator(Color.Green);
+    // promptNext("");
+    // renderWeakSeparator(Color.Green);
 
-   // AnsiConsole.Write(
-   //     writePaddedText(
-   //         valueOnePointFive(secondIncrement: true)
-   //     )
-   // );
+    // AnsiConsole.Write(
+    //     writePaddedText(
+    //         valueOnePointFive(secondIncrement: true)
+    //     )
+    // );
 
-   // promptNext("");
-   // AnsiConsole.Clear();
+    // promptNext("");
+    // AnsiConsole.Clear();
 
     AnsiConsole.Write(
         writePaddedText(
@@ -244,7 +231,7 @@ void valueExamples()
             {
                 [green]toIncrement[/]++;
             }
-            
+
             int [teal]a[/] = 4;
             increment([red]ref[/] [teal]a[/]);
 
@@ -256,15 +243,10 @@ void valueExamples()
     promptNext("");
     renderWeakSeparator(Color.Green);
 
-    AnsiConsole.Write(
-        writePaddedText(
-            valueThree()
-        )
-    );
+    AnsiConsole.Write(writePaddedText(valueThree()));
 
     promptNext("");
 }
-
 
 // example showing value types copying values on assignment
 IEnumerable<string> valueOne()
@@ -301,14 +283,13 @@ string valueOnePointFive(bool secondIncrement = false)
         b++;
     }
 
-    return
-    $"""
-    {aMarkup} after increment: {a}
-    {bMarkup} after increment: {b}
-    """;
+    return $"""
+        {aMarkup} after increment: {a}
+        {bMarkup} after increment: {b}
+        """;
 }
 
-// example showing pointer operators in unsafe context 
+// example showing pointer operators in unsafe context
 unsafe void valueTwo()
 {
     int a = 4;
@@ -339,7 +320,9 @@ string valueThree()
 
 void referenceExamples()
 {
-    AnsiConsole.Write(new Rule("Reference types (referansetyper?)").SquareBorder().RuleStyle(Color.Teal));
+    AnsiConsole.Write(
+        new Rule("Reference types (referansetyper?)").SquareBorder().RuleStyle(Color.Teal)
+    );
     AnsiConsole.Write(
         writePaddedText(
             """
@@ -348,7 +331,7 @@ void referenceExamples()
             C# har noen innebygde [green]reference types[/]: object, string, dynamic m.m. 
             [yellow]referansen[/] lagres i [orangered1]stack[/]-minne, mens selve verdien lagres i [mediumpurple2]heap[/]-minne.
             """
-        )  
+        )
     );
 
     promptNext("");
@@ -383,46 +366,42 @@ void referenceExamples()
     promptNext("");
     renderWeakSeparator(Color.Green);
 
-    AnsiConsole.Write(
-        writePaddedText(
-            string.Join('\n', referenceOne())
-        )
-    );
+    AnsiConsole.Write(writePaddedText(string.Join('\n', referenceOne())));
 
     promptNext("");
     AnsiConsole.Clear();
 
-   // AnsiConsole.Write(
-   //     writePaddedText(
-   //         """
-   //         void returnToTheTwenties([red]ref[/] Person [teal]person[/])
-   //         {
-   //             [teal]person[/].Age--;
-   //         }
+    // AnsiConsole.Write(
+    //     writePaddedText(
+    //         """
+    //         void returnToTheTwenties([red]ref[/] Person [teal]person[/])
+    //         {
+    //             [teal]person[/].Age--;
+    //         }
 
-   //         Person [teal]person[/] = new(
-   //             name: "Kristoffer",
-   //             age: 30
-   //         );
+    //         Person [teal]person[/] = new(
+    //             name: "Kristoffer",
+    //             age: 30
+    //         );
 
-   //         returnToTheTwenties([red]ref[/] [teal]person[/]);
+    //         returnToTheTwenties([red]ref[/] [teal]person[/]);
 
-   //         // hvor gammel er [teal]person[/]?
-   //         """
-   //     )
-   // );
+    //         // hvor gammel er [teal]person[/]?
+    //         """
+    //     )
+    // );
 
-   // promptNext("");
-   // renderWeakSeparator(Color.Green);
+    // promptNext("");
+    // renderWeakSeparator(Color.Green);
 
-   // AnsiConsole.Write(
-   //     writePaddedText(
-   //         string.Join('\n', referenceTwo())
-   //     )
-   // );
+    // AnsiConsole.Write(
+    //     writePaddedText(
+    //         string.Join('\n', referenceTwo())
+    //     )
+    // );
 
-   // promptNext("");
-   // AnsiConsole.Clear();
+    // promptNext("");
+    // AnsiConsole.Clear();
 
     AnsiConsole.Write(
         writePaddedText(
@@ -459,11 +438,7 @@ void referenceExamples()
     promptNext("");
     renderWeakSeparator(Color.Green);
 
-    AnsiConsole.Write(
-        writePaddedText(
-            string.Join('\n', referenceThree())
-        )
-    );
+    AnsiConsole.Write(writePaddedText(string.Join('\n', referenceThree())));
 
     promptNext("");
     AnsiConsole.Clear();
@@ -491,11 +466,7 @@ void referenceExamples()
     promptNext("");
     renderWeakSeparator(Color.Green);
 
-    AnsiConsole.Write(
-        writePaddedText(
-            string.Join('\n', referenceFour())
-        )
-    );
+    AnsiConsole.Write(writePaddedText(string.Join('\n', referenceFour())));
 
     promptNext("");
     AnsiConsole.Clear();
@@ -519,10 +490,7 @@ IEnumerable<string> referenceOne()
         person.Age--;
     }
 
-    Person person = new(
-        name: "Kristoffer",
-        age: 30
-    );
+    Person person = new(name: "Kristoffer", age: 30);
 
     yield return $"[teal]person[/] before change: {person}";
 
@@ -538,10 +506,7 @@ IEnumerable<string> referenceTwo()
         person.Age--;
     }
 
-    Person person = new(
-        name: "Kristoffer",
-        age: 30
-    );
+    Person person = new(name: "Kristoffer", age: 30);
 
     yield return $"[teal]person[/] before assignment: {person}";
 
@@ -593,30 +558,29 @@ IEnumerable<string> referenceFour()
         }
     }
 
-   // void edit2(Person[] list)
-   // {
-   //     for (int i = 0; i < list.Length; i++)
-   //     {
-   //         int age = list[i].Age;
-   //         age--;
-   //     }
-   // }
+    // void edit2(Person[] list)
+    // {
+    //     for (int i = 0; i < list.Length; i++)
+    //     {
+    //         int age = list[i].Age;
+    //         age--;
+    //     }
+    // }
 
     Person[] people = [new("Kristoffer", 30), new("Per", 90)];
     edit(people);
 
-   // Person[] people2 = [new("Kristoffer", 30), new("Per", 90)];
-   // edit2(people2);
+    // Person[] people2 = [new("Kristoffer", 30), new("Per", 90)];
+    // edit2(people2);
 
     yield return $"[green]people[/] after change: {people.Print()}";
-   // yield return $"[yellow]people2[/] after change: {people2.Print()}";
+    // yield return $"[yellow]people2[/] after change: {people2.Print()}";
 }
 
 IEnumerable<string> referenceFive()
 {
     yield return "";
 }
-    
 
 #endregion
 
@@ -654,12 +618,7 @@ void boxingUnboxingExamples()
     promptNext("");
     renderWeakSeparator(Color.Green);
 
-    AnsiConsole.Write(
-        writePaddedText(
-            string.Join('\n', boxingOne())
-        )
-    );
-
+    AnsiConsole.Write(writePaddedText(string.Join('\n', boxingOne())));
 
     promptNext("");
     AnsiConsole.Clear();
@@ -688,16 +647,14 @@ void boxingUnboxingExamples()
     promptNext("");
     renderWeakSeparator(Color.Green);
 
-    AnsiConsole.Write(
-        writePaddedText(
-            string.Join('\n', boxingTwo())
-        )
-    );
+    AnsiConsole.Write(writePaddedText(string.Join('\n', boxingTwo())));
 
     promptNext("");
     AnsiConsole.Clear();
 
-    AnsiConsole.Write(new Rule("Eksempel på boxing i funksjonskall").SquareBorder().RuleStyle(Color.Teal));
+    AnsiConsole.Write(
+        new Rule("Eksempel på boxing i funksjonskall").SquareBorder().RuleStyle(Color.Teal)
+    );
     AnsiConsole.Write(
         writePaddedText(
             """
@@ -715,57 +672,53 @@ void boxingUnboxingExamples()
     promptNext("");
     renderWeakSeparator(Color.Green);
 
-    AnsiConsole.Write(
-        writePaddedText(
-            string.Join('\n', boxingThree())
-        )
-    );
+    AnsiConsole.Write(writePaddedText(string.Join('\n', boxingThree())));
 
     promptNext("");
     AnsiConsole.Clear();
 
-   // AnsiConsole.Write(
-   //     writePaddedText(
-   //         """
-   //         string [teal]patternMatching[/](object obj)
-   //         {
-   //             // if obj is pattern matched, perform unboxing to value type
-   //             // implicit unboxing done by internal pattern matching logic
-   //             return obj switch
-   //             {
-   //                 char c => $"obj is char: {c}, {c.GetType()}",
-   //                 int d => $"obj is int: {d}, {d.GetType()}",
-   //                 bool b => $"obj is bool: {b}, {b.GetType()}",
-   //                 _ => $"type unknown"
-   //             };
-   //         }
+    // AnsiConsole.Write(
+    //     writePaddedText(
+    //         """
+    //         string [teal]patternMatching[/](object obj)
+    //         {
+    //             // if obj is pattern matched, perform unboxing to value type
+    //             // implicit unboxing done by internal pattern matching logic
+    //             return obj switch
+    //             {
+    //                 char c => $"obj is char: {c}, {c.GetType()}",
+    //                 int d => $"obj is int: {d}, {d.GetType()}",
+    //                 bool b => $"obj is bool: {b}, {b.GetType()}",
+    //                 _ => $"type unknown"
+    //             };
+    //         }
 
-   //         // performs boxing from value types to reference type 'object'
-   //         [teal]patternMatching[/]('A');       // char
-   //         [teal]patternMatching[/](true);      // bool
-   //         [teal]patternMatching[/](42);        // int
-   //         [teal]patternMatching[/](4.2);       // double
-   //         """
-   //     )
-   // );
+    //         // performs boxing from value types to reference type 'object'
+    //         [teal]patternMatching[/]('A');       // char
+    //         [teal]patternMatching[/](true);      // bool
+    //         [teal]patternMatching[/](42);        // int
+    //         [teal]patternMatching[/](4.2);       // double
+    //         """
+    //     )
+    // );
 
-   // promptNext("");
-   // renderWeakSeparator(Color.Green);
+    // promptNext("");
+    // renderWeakSeparator(Color.Green);
 
-   // AnsiConsole.Write(
-   //     writePaddedText(
-   //         string.Join('\n', boxingFour())
-   //     )
-   // );
+    // AnsiConsole.Write(
+    //     writePaddedText(
+    //         string.Join('\n', boxingFour())
+    //     )
+    // );
 
-   // promptNext("");
-   // renderSeparator();
+    // promptNext("");
+    // renderSeparator();
 }
 
 IEnumerable<string> boxingOne()
 {
     int a = 4;
-    object b = a;         // implicit, the value '4' is copied into 'b' and stored on the heap
+    object b = a; // implicit, the value '4' is copied into 'b' and stored on the heap
     object c = (object)a; // explicit, the value '4' is copied into 'c' and stored on the heap
 
     yield return $"[green]b[/] after boxing: {b}";
@@ -778,7 +731,7 @@ IEnumerable<string> boxingOne()
 IEnumerable<string> boxingTwo()
 {
     object d = 4.2;
-    double e = (double) d; // explicit
+    double e = (double)d; // explicit
 
     yield return $"type of [teal]d[/] before unboxing when calling [teal]d[/].GetType(): {d.GetType()}";
     yield return $"[green]e[/] after unboxing: {e.ToString("F1")}";
@@ -792,9 +745,9 @@ IEnumerable<string> boxingThree()
     // string.Format(string format, object? arg0, object? arg1, object? arg2);
     string formatStr = string.Format(
         format: "{0}, {1}, {2}",
-        arg0: helloWorld,      // reference type
-        arg1: b,               // value type
-        arg2: fortytwo         // value type
+        arg0: helloWorld, // reference type
+        arg1: b, // value type
+        arg2: fortytwo // value type
     );
 
     yield return $"result of [teal]formatStr[/]: {formatStr}\n";
@@ -812,7 +765,7 @@ IEnumerable<string> boxingFour()
             char c => $"obj is char: {c}, {c.GetType()}",
             int d => $"obj is int: {d}, {d.GetType()}",
             bool b => $"obj is bool: {b}, {b.GetType()}",
-            _ => $"type unknown"
+            _ => $"type unknown",
         };
     }
 
@@ -822,18 +775,13 @@ IEnumerable<string> boxingFour()
     yield return $"result of pattern matching double d: {patternMatching(4.2)}";
 }
 
-
 #endregion
 
 #region [ Advanced examples ]
 
 void advancedExamples()
 {
-    string[] advancedExampleChoices = [
-        "1. Structs",
-        "2. Structs with inline arrays",
-        "Exit"
-    ];
+    string[] advancedExampleChoices = ["1. Structs", "2. Structs with inline arrays", "Exit"];
 
     int index;
 
@@ -863,8 +811,7 @@ void advancedExamples()
                 index = 100;
                 break;
         }
-    }
-    while (index < 10);
+    } while (index < 10);
 }
 
 void structExamples()
@@ -928,7 +875,7 @@ void structInlineArraysExamples()
         writePaddedText(
             """
             Example using a ref struct '[green]CoordinatesWithCharBuffer[/]', which prohibits the struct from escaping to the heap.
-            
+
             The ref struct also contains a field of type '[green]CharBuffer[/]', which is decorated with an [yellow][[InlineArray]][/] attribute.
             A struct with an [yellow][[InlineArray]][/] attribute creates an array that is stored on the stack. The type of the array is decided by the private field inside the struct, in our case a [teal]char[/].
             """
@@ -978,7 +925,7 @@ void structInlineArraysExamples()
         writePaddedText(
             $"""
             [green]CoordinatesWithCharBuffer[/] coordinates = new(x: 5.34, y: 60.37, location: "Solheimsgaten");
-            
+
             ToString(): {coordinates.ToString()}
             """
         )

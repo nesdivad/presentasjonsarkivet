@@ -39,12 +39,17 @@ public ref struct CoordinatesWithCharBuffer : ICoordinates
 {
     public double X { get; init; }
     public double Y { get; init; }
-    public ReadOnlySpan<char> Location { get => location.AsReadonlySpan(); }
+    public ReadOnlySpan<char> Location
+    {
+        get => location.AsReadonlySpan();
+    }
     private CharBuffer location;
 
     public CoordinatesWithCharBuffer(double x, double y, string location)
     {
-        X = x; Y = y; this.location = default;
+        X = x;
+        Y = y;
+        this.location = default;
 
         int len = Math.Min(location.Length, 31);
         for (int i = 0; i < len; i++)
@@ -52,7 +57,8 @@ public ref struct CoordinatesWithCharBuffer : ICoordinates
             this.location[i] = location[i];
         }
 
-        if (len < 32) this.location[len] = '\0';
+        if (len < 32)
+            this.location[len] = '\0';
     }
 
     public override string ToString()
