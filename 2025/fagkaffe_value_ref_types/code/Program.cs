@@ -78,7 +78,11 @@ void intro()
     AnsiConsole.Write(
         writePaddedText(
             """
-            - [purple]Type[/]: Måten vi klassifiserer data i C#. Alle variabler må ha en type. Typen sier noe om hvilke data variabelen kan inneholde og hvilke operasjoner vi kan utføre på den.
+            - [darkorange]Programminne[/]:
+                En del av datamaskinens minne hvor data lagres under programmets kjøretid.
+                I C# finnes det to forskjellige deler av programminne, [orangered1]stack[/]- og [mediumpurple2]heap[/]-minne. 
+                    [orangered1]stack[/]-minne er raskt, men har lite lagringsplass.
+                    [mediumpurple2]heap[/]-minne er tregt, men har masse plass til lagring av data.
             """
         )
     );
@@ -88,9 +92,19 @@ void intro()
     AnsiConsole.Write(
         writePaddedText(
             """
-            - [darkorange]Programminne[/]: Det finnes to typer programminne, [orangered1]stack[/]- og [mediumpurple2]heap[/]-minne. 
-                [orangered1]stack[/]-minne er raskt, men har lite lagringsplass.
-                [mediumpurple2]heap[/]-minne er tregt, men har masse plass til lagring av data.
+            - [lightseagreen]Variabel[/]: 
+                Representerer en plass i [darkorange]programminne[/] hvor vi kan lagre data.
+                Alle variabler i C# lagrer [italic]verdier[/].
+            """
+        )
+    );
+
+    promptNext("");
+
+    AnsiConsole.Write(
+        writePaddedText(
+            """
+            - [purple]Type[/]: Måten vi klassifiserer data i C#. Alle [lightseagreen]variabler[/] må ha en type. Typen sier noe om hvilke data [lightseagreen]variabelen[/] kan inneholde og hvilke operasjoner vi kan utføre på den.
             """
         )
     );
@@ -104,7 +118,7 @@ void intro()
 
 void valueExamples()
 {
-    AnsiConsole.Write(new Rule("Value types (verdityper?)").SquareBorder().RuleStyle(Color.Teal));
+    AnsiConsole.Write(new Rule("Value types").SquareBorder().RuleStyle(Color.Teal));
     AnsiConsole.Write(
         writePaddedText(
             """
@@ -170,7 +184,7 @@ void valueExamples()
         writePaddedText(
             $"""
             {refMarkup} brukes for å sende en variabel som [yellow]referanse[/] til en funksjon eller når den settes lik en annen variabel.
-            En [yellow]referanse[/] er en adresse til et område i programmets minne.
+            En [yellow]referanse[/] er en adresse til et område i [darkorange]programmets minne[/].
             """
         )
     );
@@ -529,7 +543,7 @@ IEnumerable<string> referenceThree()
     {
         for (int i = 0; i < list.Length; i++)
         {
-            ref int target = ref list[i];
+            int target = list[i];
             target++;
             //list[i] = target;
         }
@@ -575,11 +589,6 @@ IEnumerable<string> referenceFour()
 
     yield return $"[green]people[/] after change: {people.Print()}";
     // yield return $"[yellow]people2[/] after change: {people2.Print()}";
-}
-
-IEnumerable<string> referenceFive()
-{
-    yield return "";
 }
 
 #endregion
