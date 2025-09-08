@@ -15,7 +15,7 @@ string[] baseChoices =
 
 const string aMarkup = "[teal]a[/]";
 const string bMarkup = "[green]b[/]";
-const string refMarkup = "[red]ref[/]";
+// const string refMarkup = "[red]ref[/]";
 
 Start();
 
@@ -63,15 +63,6 @@ void Start()
 void intro()
 {
     AnsiConsole.Write(new Rule("Typer i C#").SquareBorder().RuleStyle(Color.Teal));
-    AnsiConsole.Write(
-        writePaddedText(
-            """
-            Ting om introen skal hit:
-
-            ...
-            """
-        )
-    );
 
     promptNext("");
 
@@ -94,7 +85,6 @@ void intro()
             """
             - [lightseagreen]Variabel[/]: 
                 Representerer en plass i [darkorange]programminne[/] hvor vi kan lagre data.
-                Alle variabler i C# lagrer [italic]verdier[/].
             """
         )
     );
@@ -179,38 +169,38 @@ void valueExamples()
     promptNext("");
     AnsiConsole.Clear();
 
-    AnsiConsole.Write(new Rule("ref keyword").SquareBorder().RuleStyle(Color.Teal));
-    AnsiConsole.Write(
-        writePaddedText(
-            $"""
-            {refMarkup} brukes for å sende en variabel som [yellow]referanse[/] til en funksjon eller når den settes lik en annen variabel.
-            En [yellow]referanse[/] er en adresse til et område i [darkorange]programmets minne[/].
-            """
-        )
-    );
+    // AnsiConsole.Write(new Rule("ref keyword").SquareBorder().RuleStyle(Color.Teal));
+    // AnsiConsole.Write(
+    //     writePaddedText(
+    //         $"""
+    //         {refMarkup} brukes for å sende en variabel som [yellow]referanse[/] til en funksjon eller når den settes lik en annen variabel.
+    //         En [yellow]referanse[/] er en adresse til et område i [darkorange]programmets minne[/].
+    //         """
+    //     )
+    // );
 
-    promptNext("");
-    AnsiConsole.Write(new Rule().SquareBorder().RuleStyle("dim"));
+    // promptNext("");
+    // AnsiConsole.Write(new Rule().SquareBorder().RuleStyle("dim"));
 
-    AnsiConsole.Write(
-        writePaddedText(
-            $"""
-            int {aMarkup} = 4;         // Inneholder data direkte
-            {refMarkup} int {bMarkup} = {refMarkup} {aMarkup}; // Inneholder ikke data direkte, men en [yellow]referanse[/] til {aMarkup}
-            {aMarkup}++;
+    // AnsiConsole.Write(
+    //     writePaddedText(
+    //         $"""
+    //         int {aMarkup} = 4;         // Inneholder data direkte
+    //         {refMarkup} int {bMarkup} = {refMarkup} {aMarkup}; // Inneholder ikke data direkte, men en [yellow]referanse[/] til {aMarkup}
+    //         {aMarkup}++;
 
-            // b = ?
-            """
-        )
-    );
+    //         // b = ?
+    //         """
+    //     )
+    // );
 
-    promptNext("");
-    renderWeakSeparator(Color.Green);
+    // promptNext("");
+    // renderWeakSeparator(Color.Green);
 
-    AnsiConsole.Write(writePaddedText(valueOnePointFive()));
+    // AnsiConsole.Write(writePaddedText(valueOnePointFive()));
 
-    promptNext("");
-    renderSeparator();
+    // promptNext("");
+    // renderSeparator();
 
     // AnsiConsole.Write(
     //     writePaddedText(
@@ -238,28 +228,28 @@ void valueExamples()
     // promptNext("");
     // AnsiConsole.Clear();
 
-    AnsiConsole.Write(
-        writePaddedText(
-            """
-            void increment([red]ref[/] int [green]toIncrement[/])
-            {
-                [green]toIncrement[/]++;
-            }
+    // AnsiConsole.Write(
+    //     writePaddedText(
+    //         """
+    //         void increment([red]ref[/] int [green]toIncrement[/])
+    //         {
+    //             [green]toIncrement[/]++;
+    //         }
 
-            int [teal]a[/] = 4;
-            increment([red]ref[/] [teal]a[/]);
+    //         int [teal]a[/] = 4;
+    //         increment([red]ref[/] [teal]a[/]);
 
-            // a = ?
-            """
-        )
-    );
+    //         // a = ?
+    //         """
+    //     )
+    // );
 
-    promptNext("");
-    renderWeakSeparator(Color.Green);
+    // promptNext("");
+    // renderWeakSeparator(Color.Green);
 
-    AnsiConsole.Write(writePaddedText(valueThree()));
+    // AnsiConsole.Write(writePaddedText(valueThree()));
 
-    promptNext("");
+    // promptNext("");
 }
 
 // example showing value types copying values on assignment
@@ -354,7 +344,7 @@ void referenceExamples()
     AnsiConsole.Write(
         writePaddedText(
             """
-            public class Person(string name, int age)
+            class Person(string name, int age)
             {
                 public string Name { get; set; } = name;
                 public int Age { get; set; } = age;
@@ -601,7 +591,7 @@ void boxingUnboxingExamples()
     AnsiConsole.Write(
         writePaddedText(
             """
-            [bold]Boxing[/] er prosessen for å konvertere en [green]value type[/] til en reference type [teal]object[/] eller en type som implementerer [teal]object[/].
+            [bold]Boxing[/] er prosessen for å konvertere en [green]value type[/] til en reference type, f.eks. [teal]object[/], eller en referansetype som implementerer [teal]object[/].
             Ved boxing av en [green]value type[/], blir det opprettet et [mediumpurple2]heap[/]-allokert objekt som beholder den opprinnelige typen.
             Boxing kan være både implisitt (uten cast) eller eksplisitt (med cast).
             """
@@ -635,7 +625,7 @@ void boxingUnboxingExamples()
     AnsiConsole.Write(
         writePaddedText(
             """
-            Unboxing er en konvertering fra reference type [teal]object[/] til en [green]value type[/].
+            Unboxing er en konvertering fra reference type til en [green]value type[/].
             Konverteringen må skje eksplisitt, det betyr at det må utføres en cast til riktig [green]value type[/].
             """
         )
@@ -649,6 +639,7 @@ void boxingUnboxingExamples()
             """
             object [teal]d[/] = 4.2;
             double [green]e[/] = (double) [teal]d[/]; // explicit
+            double [orangered1]f[/] = [teal]d[/];          // doesn't compile
             """
         )
     );
